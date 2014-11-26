@@ -198,16 +198,16 @@ private:
 		if(tMin1) {
 			*tMin2 = *tMin1 - (goalVelocity - startVelocity) / acceleration1;
 			if(*tMin1 < 0.0 || *tMin2 < 0.0) {
-				*tMin1 = numeric_limits<double>::infinity();
-				*tMin2 = numeric_limits<double>::infinity();
+				*tMin1 = std::numeric_limits<double>::infinity();
+				*tMin2 = std::numeric_limits<double>::infinity();
 			}
 		}
 
 		if(tMax1) {
 			*tMax2 = *tMax1 - (goalVelocity - startVelocity) / acceleration1;
 			if(*tMax1 < 0.0 || *tMax2 < 0.0) {
-				*tMax1 = numeric_limits<double>::infinity();
-				*tMax2 = numeric_limits<double>::infinity();
+				*tMax1 = std::numeric_limits<double>::infinity();
+				*tMax2 = std::numeric_limits<double>::infinity();
 			}
 		}
 	}
@@ -272,7 +272,7 @@ private:
 	static void adjustForInfeasibleIntervals(int i, double time, double maxTime,
 	                                         const Eigen::Ref<const Vector>& startVelocities, const Eigen::Ref<const Vector>& goalVelocities, const Eigen::Ref<const Vector>& distances,
 	                                         const Eigen::Ref<const Vector>& firstAccelerations, const Eigen::Ref<const Vector>& maxAccelerations, const Eigen::Ref<const Vector>& maxVelocities,
-	                                         double& minTime, pair<double, double>* infeasibleIntervals, int& limitDof)
+	                                         double& minTime, std::pair<double, double>* infeasibleIntervals, int& limitDof)
 	{
 		if(time >= maxTime) {
 			minTime = time;
@@ -331,7 +331,7 @@ public:
 		double time = time1 + time2;
 
 		assert(time >= 0.0);
-		assert(time != numeric_limits<double>::infinity());
+		assert(time != std::numeric_limits<double>::infinity());
 
 		if(abs(startVelocity + acceleration1 * time1) >= maxVelocity) {
 			time = getPLPTime(startVelocity, goalVelocity, distance, maxVelocity, acceleration1);
@@ -367,7 +367,7 @@ public:
 				if(infeasibleInterval.second == std::numeric_limits<double>::infinity()) {
 					std::cout << "infinity 1" << std::endl;
 					infeasibleInterval.first = 0.0;
-					infeasibleInterval.second = numeric_limits<double>::infinity();
+					infeasibleInterval.second = std::numeric_limits<double>::infinity();
 					return infeasibleInterval;
 					assert(false);
 				}
@@ -402,7 +402,7 @@ public:
 			                             minTime, infeasibleIntervals, limitDof);
 		}
 
-		assert(minTime < numeric_limits<double>::infinity());
+		assert(minTime < std::numeric_limits<double>::infinity());
 		return minTime;
 	}
 
