@@ -42,6 +42,7 @@
 #include <fstream>
 #include <utility>
 #include <array>
+#include <cmath>
 #include <Eigen/Core>
 
 template <int dof>
@@ -214,7 +215,7 @@ private:
 
 	static double getPLPTime(double startVelocity, double goalVelocity, double distance, double maxVelocity, double acceleration1)
 	{
-		assert(abs(startVelocity) <= maxVelocity && abs(goalVelocity) <= maxVelocity);
+		assert(std::abs(startVelocity) <= maxVelocity && std::abs(goalVelocity) <= maxVelocity);
 
 		const double boundaryVelocity = sign(acceleration1) * maxVelocity;
 		const double timeToBoundary1 = (boundaryVelocity - startVelocity) / acceleration1;
@@ -316,7 +317,7 @@ public:
 	                           double& acceleration1)
 	{
 		// determine distance travelled while accelerating from start velocity to goal velocity
-		const double accelerationTime = abs(goalVelocity - startVelocity) / maxAcceleration;
+		const double accelerationTime = std::abs(goalVelocity - startVelocity) / maxAcceleration;
 		if(accelerationTime >= maxTime)
 			return accelerationTime;
 		const double accelerationDistance = 0.5 * (startVelocity + goalVelocity) * accelerationTime;
@@ -333,7 +334,7 @@ public:
 		assert(time >= 0.0);
 		assert(time != std::numeric_limits<double>::infinity());
 
-		if(abs(startVelocity + acceleration1 * time1) >= maxVelocity) {
+		if(std::abs(startVelocity + acceleration1 * time1) >= maxVelocity) {
 			time = getPLPTime(startVelocity, goalVelocity, distance, maxVelocity, acceleration1);
 		}
 
@@ -352,10 +353,10 @@ public:
 		}
 		// for all cases below: sign(startVelocity) == sign(goalVelocity) == sign(distance) == sign(additionalDistance) == sign(acceleration1) == -sign(acceleration2)
 		else {
-			double zeroTime1 = abs(startVelocity) / maxAcceleration;
-			double zeroTime2 = abs(goalVelocity) / maxAcceleration;
+			double zeroTime1 = std::abs(startVelocity) / maxAcceleration;
+			double zeroTime2 = std::abs(goalVelocity) / maxAcceleration;
 			double zeroDistance = zeroTime1 * startVelocity / 2.0 + zeroTime2 * goalVelocity / 2.0;
-			if(abs(zeroDistance) < abs(distance)) {
+			if(std::abs(zeroDistance) < std::abs(distance)) {
 				infeasibleInterval.first = std::numeric_limits<double>::infinity();
 				infeasibleInterval.second = std::numeric_limits<double>::infinity();
 			}
@@ -372,7 +373,7 @@ public:
 					assert(false);
 				}
 
-				if(abs(startVelocity + timeHigh1 * -acceleration1) >= maxVelocity) {
+				if(std::abs(startVelocity + timeHigh1 * -acceleration1) >= maxVelocity) {
 					infeasibleInterval.second = getPLPTime(startVelocity, goalVelocity, distance, maxVelocity, -acceleration1);
 					if(infeasibleInterval.second == std::numeric_limits<double>::infinity()) {
 						std::cout << "infinity 2" << std::endl;
@@ -390,7 +391,7 @@ public:
 	                         const Vector &maxVelocities =  std::numeric_limits<double>::infinity() * Vector::Ones(),
 	                         double maxTime = std::numeric_limits<double>::infinity())
 	{
-		const Vector distances = state2.head<dof>() - state1.head<dof>();
+		const Vector distances = state2.template head<dof>() - state1.template head<dof>();
 		double minTime = 0.0;
 		int limitDof = -1; // DOF for which the min time but not the infeasible interval has been calculated yet
 		std::pair<double, double> infeasibleIntervals[dof];
@@ -398,7 +399,7 @@ public:
 		
 		for(unsigned int i = 0; i < dof && minTime < maxTime; ++i) {
 			const double time = getMinTime1D(state1[dof+i], state2[dof+i], distances[i], maxAccelerations[i], maxVelocities[i], maxTime, firstAccelerations[i]);
-			adjustForInfeasibleIntervals(i, time, maxTime, state1.tail<dof>(), state2.tail<dof>(), distances, firstAccelerations, maxAccelerations, maxVelocities,
+			adjustForInfeasibleIntervals(i, time, maxTime, state1.template tail<dof>(), state2.template tail<dof>(), distances, firstAccelerations, maxAccelerations, maxVelocities,
 			                             minTime, infeasibleIntervals, limitDof);
 		}
 
