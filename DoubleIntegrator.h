@@ -220,7 +220,7 @@ private:
 		const double boundaryVelocity = sign(acceleration1) * maxVelocity;
 		const double timeToBoundary1 = (boundaryVelocity - startVelocity) / acceleration1;
 		const double timeToBoundary2 = (goalVelocity - boundaryVelocity) / -acceleration1;
-		const double distanceToBoundary = 0.5 * (2.0 * squared(boundaryVelocity) - squared(startVelocity) - squared(goalVelocity)) / 2/ acceleration1;
+		const double distanceToBoundary = 0.5 * (2.0 * squared(boundaryVelocity) - squared(startVelocity) - squared(goalVelocity)) / acceleration1;
 		const double boundaryTime = (distance - distanceToBoundary) / boundaryVelocity;
 
 		if(boundaryTime < 0.0)
