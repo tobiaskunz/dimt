@@ -334,7 +334,7 @@ public:
 		assert(time >= 0.0);
 		assert(time != std::numeric_limits<double>::infinity());
 
-		if(std::abs(startVelocity + acceleration1 * time1) >= maxVelocity) {
+		if(time < maxTime && std::abs(startVelocity + acceleration1 * time1) >= maxVelocity) {
 			time = getPLPTime(startVelocity, goalVelocity, distance, maxVelocity, acceleration1);
 		}
 
