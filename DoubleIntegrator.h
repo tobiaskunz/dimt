@@ -39,7 +39,6 @@
 #pragma once
 
 #include <iostream>
-#include <fstream>
 #include <utility>
 #include <array>
 #include <cmath>
