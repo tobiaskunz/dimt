@@ -49,7 +49,6 @@ class DoubleIntegrator {
 public:
 	typedef Eigen::Matrix<double, 2 * dof, 1> StateVector;
 	typedef Eigen::Matrix<double, dof, 1> Vector;
-	typedef Eigen::Matrix<double, dof, dof> Matrix;
 
 	class Trajectory1D {
 		// 3 segments of constant acceleration: position/velocity[i] := position/velocity at time[i]
